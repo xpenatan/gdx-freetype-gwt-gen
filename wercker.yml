@@ -17,8 +17,10 @@ build:
     - script:
          name: emsdk use
          code: |
+           emcc -v
            chmod 777 freetype-2.5.5
            cd freetype-2.5.5
+           chmod -R a+rX *
            chmod 777 ./configure
            emconfigure ./configure
            emmake make
