@@ -1,0 +1,34 @@
+box: nodesource/trusty
+no-response-timeout: 20
+command-timeout: 60
+build:
+  steps:
+    - install-packages:
+        packages: git build-essential default-jre cmake g++ python curl tar python-pip node
+    - script:
+         name: emsdk
+         code: |
+           curl https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz | tar -xz
+           cd emsdk_portable
+           ./emsdk update
+           ./emsdk install latest
+           ./emsdk activate latest
+           source ./emsdk_env.sh
+    - script:
+         name: emsdk use
+         code: |
+           chmod 777 freetype-2.5.5
+           cd freetype-2.5.5
+           chmod 777 ./configure
+           emconfigure ./configure
+           emmake make
+           emcc -I ./include -o main.o main.c
+           emcc -O3 -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS='["_main","_load_font","_find_font","_get_bitmap", "_get_left","_get_top","_get_width","_get_height","_get_pitch","_get_advance"]' main.o objs/.libs/libfreetype.so -o freetype.js
+deploy:
+    steps:
+    github-release:
+      - script:
+         name: github-release
+         code: | 
+         curl -L -k https://github.com/c4milo/github-release/releases/download/v1.0.8/github-release_v1.0.8_linux_amd64.tar.gz | tar -xz
+         ./github-release ${WERCKER_GIT_OWNER}/${WERCKER_GIT_REPOSITORY} v.2.5.5 "master" "FreeType-js for use with libgdx" "freetype.j*"
