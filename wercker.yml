@@ -22,8 +22,8 @@ build:
            chmod 777 ./configure
            emconfigure ./configure
            emmake make
-           emcc -I ./include -o main.o main.c
-           emcc -O3 -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS='["_main","_load_font","_find_font","_get_bitmap", "_get_left","_get_top","_get_width","_get_height","_get_pitch","_get_advance"]' main.o objs/.libs/libfreetype.so -o freetype.js
+           emcc -I ./include -o freetype.o freetype.c
+           emcc -O3 -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS='["_c_initFreeType"]' freetype.o objs/.libs/libfreetype.so -o freetype.js
 deploy:
     steps:
     github-release:
