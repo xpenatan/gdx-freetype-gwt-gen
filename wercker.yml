@@ -4,7 +4,7 @@ command-timeout: 60
 build:
   steps:
     - install-packages:
-        packages: git build-essential default-jre cmake g++ python curl tar python-pip node
+        packages: git build-essential default-jre cmake g++ python curl tar python-pip nodejs
     - script:
          name: emsdk
          code: |
