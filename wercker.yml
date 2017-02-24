@@ -1,4 +1,4 @@
-box:
+box: 
       id: ubuntu
       tag: 15.10
 no-response-timeout: 20
